@@ -1,50 +1,13 @@
-import { useState, useEffect } from 'react'
-
-const ENDPOINT_JOKE = 'https://api.chucknorris.io/jokes/random'
-const ENDPOINT_IMAGE = 'https://cataas.com/cat/says/'
+import { useImage } from './hooks/useImage'
+import { useJoke } from './hooks/useJoke'
 
 function App() {
-  const [joke, setJoke] = useState()
-  const [image, setImage] = useState()
-  const [word, setWord] = useState()
-
-  const getJoke = async () => {
-    try {
-      const response = await fetch(ENDPOINT_JOKE)
-      const data = await response.json()
-
-      const { value } = data
-      setJoke(value)
-
-      const w = value.split(' ')[0]
-      setWord(w)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const getImage = async () => {
-    try {
-      const res = await fetch(`${ENDPOINT_IMAGE}${word}`)
-      const d = res.url
-
-      setImage(d)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  const { joke, word, getJokeInfo } = useJoke()
+  const { image } = useImage({ joke, word })
 
   const handleClick = () => {
-    getJoke()
+    getJokeInfo()
   }
-
-  useEffect(() => {
-    getJoke()
-  }, [])
-
-  useEffect(() => {
-    getImage()
-  }, [joke])
 
   return (
     <main className='container d-flex justify-content-center'>
